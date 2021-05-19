@@ -1,6 +1,7 @@
 package com.cmp404.pharmacymanagement.resource;
 
 import com.cmp404.pharmacymanagement.model.Customer;
+import com.cmp404.pharmacymanagement.service.CartService;
 import com.cmp404.pharmacymanagement.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,12 @@ import java.util.List;
 public class CustomerResource {
 
     private final CustomerService customerService;
+    private final CartService cartService;
 
     @Autowired
-    public CustomerResource(CustomerService customerService) {
+    public CustomerResource(CustomerService customerService, CartService cartService) {
         this.customerService = customerService;
+        this.cartService = cartService;
     }
 
     @GetMapping
@@ -35,6 +38,7 @@ public class CustomerResource {
     @PostMapping
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer c) {
         Customer customer = customerService.addCustomer(c);
+        cartService.addCart(customer.getId());
         return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }
 

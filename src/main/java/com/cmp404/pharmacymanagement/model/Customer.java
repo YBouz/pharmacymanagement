@@ -1,5 +1,7 @@
 package com.cmp404.pharmacymanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,13 +13,19 @@ public class Customer implements Serializable {
     private Long id;
     private String name;
     private String email;
+    private String address;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Cart cart;
 
     public Customer() {
     }
 
-    public Customer(String name, String email) {
+    public Customer(String name, String email, String address) {
         this.name = name;
         this.email = email;
+        this.address = address;
     }
 
     public Long getId() {
@@ -44,12 +52,30 @@ public class Customer implements Serializable {
         this.email = email;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Long getCart() {
+        return cart.getId();
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", cart=" + cart +
                 '}';
     }
 }

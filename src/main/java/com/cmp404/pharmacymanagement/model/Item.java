@@ -1,7 +1,12 @@
 package com.cmp404.pharmacymanagement.model;
 
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 public class Item implements Serializable {
@@ -12,6 +17,13 @@ public class Item implements Serializable {
     private String name;
     private String description;
     private Long quantity;
+    private BigDecimal price;
+
+    @CreatedDate
+    private Date createTime;
+
+    @UpdateTimestamp
+    private Date updateTime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pharmacy_id", nullable = false)
@@ -20,10 +32,11 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(String name, String description, Long quantity, Pharmacy pharmacy) {
+    public Item(String name, String description, Long quantity, BigDecimal price, Pharmacy pharmacy) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
+        this.price = price;
         this.pharmacy = pharmacy;
     }
 
@@ -59,6 +72,18 @@ public class Item implements Serializable {
         this.quantity = quantity;
     }
 
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Long getPharmacy() {
+        return pharmacy.getId();
+    }
+
     public void setPharmacy(Pharmacy pharmacy) {
         this.pharmacy = pharmacy;
     }
@@ -70,6 +95,7 @@ public class Item implements Serializable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", quantity=" + quantity +
+                ", price=" + price +
                 ", pharmacy=" + pharmacy +
                 '}';
     }
